@@ -16,6 +16,8 @@
 		173DB47A1E1E4FD10061BA0F /* AnnotableDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 173DB4791E1E4FD10061BA0F /* AnnotableDemoTests.m */; };
 		173DB4851E1E4FD10061BA0F /* AnnotableDemoUITests.m in Sources */ = {isa = PBXBuildFile; fileRef = 173DB4841E1E4FD10061BA0F /* AnnotableDemoUITests.m */; };
 		173DB4941E1E51B60061BA0F /* MainViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 173DB4931E1E51B60061BA0F /* MainViewController.m */; };
+		173DB4AD1E1F6BCC0061BA0F /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 173DB4AC1E1F6BCC0061BA0F /* Photos.framework */; };
+		173DB4B01E1F83D00061BA0F /* JFMainCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 173DB4AF1E1F83D00061BA0F /* JFMainCollectionViewCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -54,6 +56,9 @@
 		173DB4861E1E4FD10061BA0F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		173DB4921E1E51B60061BA0F /* MainViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainViewController.h; sourceTree = "<group>"; };
 		173DB4931E1E51B60061BA0F /* MainViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainViewController.m; sourceTree = "<group>"; };
+		173DB4AC1E1F6BCC0061BA0F /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
+		173DB4AE1E1F83D00061BA0F /* JFMainCollectionViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JFMainCollectionViewCell.h; sourceTree = "<group>"; };
+		173DB4AF1E1F83D00061BA0F /* JFMainCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JFMainCollectionViewCell.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				173DB4AD1E1F6BCC0061BA0F /* Photos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,6 +94,7 @@
 				173DB4781E1E4FD10061BA0F /* AnnotableDemoTests */,
 				173DB4831E1E4FD10061BA0F /* AnnotableDemoUITests */,
 				173DB45D1E1E4FD00061BA0F /* Products */,
+				173DB4AB1E1F6BCC0061BA0F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,6 +115,8 @@
 				173DB4631E1E4FD10061BA0F /* AppDelegate.m */,
 				173DB4921E1E51B60061BA0F /* MainViewController.h */,
 				173DB4931E1E51B60061BA0F /* MainViewController.m */,
+				173DB4AE1E1F83D00061BA0F /* JFMainCollectionViewCell.h */,
+				173DB4AF1E1F83D00061BA0F /* JFMainCollectionViewCell.m */,
 				173DB4651E1E4FD10061BA0F /* ViewController.h */,
 				173DB4661E1E4FD10061BA0F /* ViewController.m */,
 				173DB4681E1E4FD10061BA0F /* Main.storyboard */,
@@ -143,6 +152,14 @@
 				173DB4861E1E4FD10061BA0F /* Info.plist */,
 			);
 			path = AnnotableDemoUITests;
+			sourceTree = "<group>";
+		};
+		173DB4AB1E1F6BCC0061BA0F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				173DB4AC1E1F6BCC0061BA0F /* Photos.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -207,6 +224,7 @@
 		173DB4541E1E4FD00061BA0F /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = JF;
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = je_ffy;
 				TargetAttributes = {
@@ -285,6 +303,7 @@
 				173DB4641E1E4FD10061BA0F /* AppDelegate.m in Sources */,
 				173DB4611E1E4FD00061BA0F /* main.m in Sources */,
 				173DB4941E1E51B60061BA0F /* MainViewController.m in Sources */,
+				173DB4B01E1F83D00061BA0F /* JFMainCollectionViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -524,6 +543,7 @@
 				173DB48B1E1E4FD10061BA0F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		173DB48C1E1E4FD10061BA0F /* Build configuration list for PBXNativeTarget "AnnotableDemoTests" */ = {
 			isa = XCConfigurationList;
@@ -532,6 +552,7 @@
 				173DB48E1E1E4FD10061BA0F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		173DB48F1E1E4FD10061BA0F /* Build configuration list for PBXNativeTarget "AnnotableDemoUITests" */ = {
 			isa = XCConfigurationList;
@@ -540,6 +561,7 @@
 				173DB4911E1E4FD10061BA0F /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
