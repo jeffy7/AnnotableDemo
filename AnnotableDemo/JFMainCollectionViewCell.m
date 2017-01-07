@@ -18,6 +18,7 @@
     if (self = [super initWithFrame:frame]) {
         self.layer.borderWidth = 0.50f;
         self.layer.borderColor = [UIColor redColor].CGColor;
+
         [self addSubview:self.photoImageView];
     }
     
@@ -26,8 +27,8 @@
 
 - (UIImageView *)photoImageView {
     if (!_photoImageView) {
-        UIImageView *photoImageView = [[UIImageView alloc] initWithFrame:self.frame];
-        photoImageView.contentMode = UIViewContentModeScaleAspectFit;
+        UIImageView *photoImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
+//        photoImageView.contentMode = UIViewContentModeScaleToFill;
         _photoImageView = photoImageView;
     }
     

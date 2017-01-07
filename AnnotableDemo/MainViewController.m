@@ -9,9 +9,10 @@
 #import "MainViewController.h"
 #import <Photos/Photos.h>
 #import "JFMainCollectionViewCell.h"
+#import "JFEditImageViewController.h"
 
-#define ScreenWidth ([UIScreen mainScreen].bounds.size.width)
 static NSString *CollectionViewIdentifire = @"CollectionCell";
+static CGFloat CELL_LINE_MAGIN = 1.0f;
 
 @interface MainViewController ()
 <UINavigationControllerDelegate,UIImagePickerControllerDelegate,UICollectionViewDelegate,UICollectionViewDataSource>
@@ -19,6 +20,7 @@ static NSString *CollectionViewIdentifire = @"CollectionCell";
 @property (nonatomic, strong) UICollectionView *collectionView;
 @property (nonatomic, strong) PHImageRequestOptions *requestOption;
 @property (nonatomic, strong) PHFetchResult<PHAsset *> *assetResult;
+@property (nonatomic, strong) NSMutableArray *dataArray;
 
 @end
 
@@ -32,26 +34,39 @@ static NSString *CollectionViewIdentifire = @"CollectionCell";
     [super viewDidLoad];
     
     [self setUpBarButtonItem];
-    
-    self.assetResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+    self.dataArray = [[NSMutableArray alloc] init];
+    [self setUpDataArray];
     
     [self.view addSubview:self.collectionView];
     
     [self.collectionView reloadData];
 }
 
+- (void)setUpDataArray {
+    NSLog(@"startTime =");
+    __block NSMutableArray *tarDataArray= [NSMutableArray array];
+
+    self.assetResult = [PHAsset fetchAssetsWithMediaType:PHAssetMediaTypeImage options:nil];
+
+    [self.assetResult enumerateObjectsUsingBlock:^(PHAsset * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        [tarDataArray addObject:obj];
+    }];
+    
+    NSArray *tarReverseArray = [NSArray arrayWithArray:tarDataArray];
+    _dataArray = (NSMutableArray *)[[tarReverseArray reverseObjectEnumerator] allObjects];
+    NSLog(@"endTime =");
+}
+
 - (UICollectionView *)collectionView {
     if (!_collectionView) {
-        NSLog(@"ScreenWidth = %f",ceil(ScreenWidth));
+        CGFloat cellW = (self.view.frame.size.width - 1*3 ) / 4;
+        UICollectionViewFlowLayout *layout = [[UICollectionViewFlowLayout alloc] init];
+        layout.itemSize = CGSizeMake(cellW, cellW);
+        layout.minimumInteritemSpacing = 1.0f;
+        layout.minimumLineSpacing = CELL_LINE_MAGIN;
 
-        NSLog(@"ScreenWidth/4 = %f",ceil(ScreenWidth/4));
-        UICollectionViewFlowLayout *flowlayout = [[UICollectionViewFlowLayout alloc] init];
-        flowlayout.scrollDirection = UICollectionViewScrollDirectionVertical;
-        flowlayout.sectionInset = UIEdgeInsetsMake(0, 0, 0, 0);
-        flowlayout.itemSize = CGSizeMake(floor(ScreenWidth/4), floor(ScreenWidth/4));
-        flowlayout.minimumLineSpacing = 0.0f;
         
-        UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:flowlayout];
+        UICollectionView *collectionView = [[UICollectionView alloc] initWithFrame:self.view.frame collectionViewLayout:layout];
         collectionView.backgroundColor = [UIColor whiteColor];
         collectionView.delegate = self;
         collectionView.dataSource = self;
@@ -66,6 +81,7 @@ static NSString *CollectionViewIdentifire = @"CollectionCell";
     if (!_requestOption) {
         PHImageRequestOptions *requestOption = [[PHImageRequestOptions alloc] init];
         requestOption.resizeMode = PHImageRequestOptionsResizeModeExact;//自定义图片大小的加载模式
+        requestOption.version = PHImageRequestOptionsVersionOriginal;
         requestOption.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
         requestOption.synchronous = YES;//是否同步加载
         _requestOption = requestOption;
@@ -85,23 +101,30 @@ static NSString *CollectionViewIdentifire = @"CollectionCell";
 #pragma mark - UICollectionViewDelegate && UICollectionViewDataSource
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section {
     
-    return self.assetResult.count;
+    return _dataArray.count;
 }
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     JFMainCollectionViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:CollectionViewIdentifire forIndexPath:indexPath];
     
-//    CGSizeMake(self.assetResult[indexPath.row].pixelWidth, self.assetResult[indexPath.row].pixelHeight);
-//    
-//    [[PHCachingImageManager defaultManager] requestImageForAsset:self.assetResult[indexPath.row] targetSize: CGSizeMake(110, 110) contentMode:PHImageContentModeDefault options:self.requestOption resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
-//        
-//        cell.photoImageView.image = result;
-//
-//    }];
+    CGSizeMake(self.assetResult[indexPath.row].pixelWidth, self.assetResult[indexPath.row].pixelHeight);
+    CGFloat cellW = (self.view.frame.size.width - 1*3 ) / 4;
+
+    [[PHCachingImageManager defaultManager] requestImageForAsset:_dataArray[indexPath.row] targetSize: CGSizeMake(cellW*2, cellW*2) contentMode:PHImageContentModeAspectFill options:self.requestOption resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+        
+        cell.photoImageView.image = result;
+
+    }];
     
     return cell;
 }
 
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+    JFEditImageViewController *editImageViewController = [[JFEditImageViewController alloc] init];
+    [self presentViewController:editImageViewController animated:YES completion:^{
+        
+    }];
+}
 
 #pragma mark -
 #pragma mark - Action
@@ -124,9 +147,31 @@ static NSString *CollectionViewIdentifire = @"CollectionCell";
 #pragma mark -
 #pragma mark - UIImagePickerControllerDelegate 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary<NSString *,id> *)info {
-
+    NSString *type = [info objectForKey:UIImagePickerControllerMediaType];
+    if ([type isEqualToString:@"public.image"]) {
+        
+        UIImage *image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+        [picker dismissViewControllerAnimated:YES completion:^{
+            UIImageWriteToSavedPhotosAlbum(image, self, @selector(image:didFinishSavingWithError:contextInfo:), nil);
+        }];
+        
+    }
 }
 
+
+- (void)image:(UIImage*)image didFinishSavingWithError:(NSError*)error contextInfo:(void*)contextInfo {
+    
+    if (!error) {
+        
+        [self performSelector:@selector(refreshdata) withObject:nil afterDelay:0.3f];
+    }
+    
+}
+
+- (void)refreshdata {
+    [self setUpDataArray];
+    [self.collectionView reloadData];
+}
 
 - (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
     [picker dismissViewControllerAnimated:YES completion:^{
