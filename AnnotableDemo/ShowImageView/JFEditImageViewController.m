@@ -12,14 +12,22 @@
 
 @property (nonatomic, strong) UIButton *closeCurrentVCButton;
 @property (nonatomic, strong) UIButton *actionButton;
+@property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) PHImageRequestOptions *requestOption;
+
 
 @end
 
 @implementation JFEditImageViewController
 
+- (void)dealloc {
+    
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor whiteColor];
+    [self.view addSubview:self.imageView];
     [self.view addSubview:self.closeCurrentVCButton];
     [self.view addSubview:self.actionButton];
 
@@ -55,6 +63,47 @@
     return _actionButton;
 }
 
+- (UIImageView *)imageView {
+    if (!_imageView) {
+        UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.frame];
+        imageView.layer.borderWidth = 0.50f;
+        imageView.layer.borderColor = [UIColor redColor].CGColor;
+        imageView.contentMode = UIViewContentModeScaleAspectFit;
+        [self.view addSubview:_imageView = imageView];
+    }
+    
+    return _imageView;
+}
+
+- (PHImageRequestOptions *)requestOption {
+    if (!_requestOption) {
+        PHImageRequestOptions *requestOption = [[PHImageRequestOptions alloc] init];
+        requestOption.resizeMode = PHImageRequestOptionsResizeModeExact;//自定义图片大小的加载模式
+        requestOption.version = PHImageRequestOptionsVersionOriginal;
+        requestOption.deliveryMode = PHImageRequestOptionsDeliveryModeHighQualityFormat;
+        requestOption.synchronous = YES;//是否同步加载
+        _requestOption = requestOption;
+    }
+    
+    return _requestOption;
+}
+
+
+#pragma mark -
+#pragma mark - Setter Method
+- (void)setPhAsset:(PHAsset *)phAsset {
+    _phAsset = phAsset;
+    
+    [[PHCachingImageManager defaultManager] requestImageForAsset:_phAsset targetSize:PHImageManagerMaximumSize contentMode:PHImageContentModeAspectFill options:self.requestOption resultHandler:^(UIImage * _Nullable result, NSDictionary * _Nullable info) {
+        
+        self.imageView.image = result;
+        
+    }];
+    
+}
+
+#pragma mark -
+#pragma mark - Action
 - (void)closeCurrentVC {
     [self dismissViewControllerAnimated:YES completion:^{
         

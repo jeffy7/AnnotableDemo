@@ -10,4 +10,6 @@
 
 @interface JFEditImageViewController : UIViewController
 
+@property (nonatomic, strong) PHAsset * _Nonnull phAsset;
+
 @end

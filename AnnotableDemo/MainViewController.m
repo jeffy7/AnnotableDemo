@@ -7,7 +7,6 @@
 //
 
 #import "MainViewController.h"
-#import <Photos/Photos.h>
 #import "JFMainCollectionViewCell.h"
 #import "JFEditImageViewController.h"
 
@@ -121,6 +120,7 @@ static CGFloat CELL_LINE_MAGIN = 1.0f;
 
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     JFEditImageViewController *editImageViewController = [[JFEditImageViewController alloc] init];
+    editImageViewController.phAsset = _dataArray[indexPath.row];
     [self presentViewController:editImageViewController animated:YES completion:^{
         
     }];

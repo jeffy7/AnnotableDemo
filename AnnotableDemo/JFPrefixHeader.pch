@@ -8,6 +8,7 @@
 
 #ifndef JFPrefixHeader_pch
 #define JFPrefixHeader_pch
+#import <Photos/Photos.h>
 
 #define ScreenWidth ([UIScreen mainScreen].bounds.size.width)
 
